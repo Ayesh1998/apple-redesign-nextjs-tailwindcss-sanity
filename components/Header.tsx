@@ -5,9 +5,12 @@ import {
   ShoppingBagIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
+import { selectBasketItems } from "../redux/slices/basketSlice";
 
 const Header = () => {
   const session = false;
+  const itemsInBasket = useSelector(selectBasketItems);
 
   return (
     <header className="sticky z-30 p-4 top-0 flex w-full items-center justify-between bg-[#e7ecee]">
@@ -33,12 +36,17 @@ const Header = () => {
         <MagnifyingGlassIcon className="headerIcon" />
         <Link href="/checkout">
           <div className="relative cursor-pointer">
-            <span
-              className="absolute -right-1 -top-1 z-50 flex h-4 w-4 items-center justify-center
-            rounded-full bg-gradient-to-r from-pink-500 to-violet-500 text-[10px] text-white"
-            >
-              5
-            </span>
+            {
+              itemsInBasket.length > 0 && (
+                <span
+                className="absolute -right-1 -top-1 z-50 flex h-4 w-4 items-center justify-center
+              rounded-full bg-gradient-to-r from-pink-500 to-violet-500 text-[10px] text-white"
+              >
+                {itemsInBasket.length}
+              </span>
+              )
+            }
+         
             <ShoppingBagIcon className="headerIcon" />
           </div>
         </Link>
