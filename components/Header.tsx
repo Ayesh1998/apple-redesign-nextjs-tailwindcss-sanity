@@ -10,7 +10,7 @@ const Header = () => {
   const session = false;
 
   return (
-    <header className="sticky z-30 flex w-full items-center justify-between bg-[#e7ecee]">
+    <header className="sticky z-30 p-4 top-0 flex w-full items-center justify-between bg-[#e7ecee]">
       <div className="flex items-center justify-center md:w-1/5">
         <Link href="/">
           <div className="relative h-10 w-5 cursor-pointer  opacity-75 transition hover:opacity-100">
