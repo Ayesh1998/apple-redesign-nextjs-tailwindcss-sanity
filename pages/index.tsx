@@ -1,36 +1,42 @@
+import { Tab } from "@headlessui/react";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
-import Image from "next/image";
+import Basket from "../components/Basket";
 import Header from "../components/Header";
 import Landing from "../components/Landing";
-import { Tab } from "@headlessui/react";
+import Product from "../components/Product";
 import { fetchCategories } from "../utils/fetchCategories";
 import { fetchProducts } from "../utils/fetchProducts";
-import Product from "../components/Product";
-import Basket from "../components/Basket";
+import { getSession } from "next-auth/react";
+import type { Session } from "next-auth";
 
-interface Props{
-  categories : Category[],
-  products: Product[],
+interface Props {
+  categories: Category[];
+  products: Product[];
+  session: Session | null;
 }
 
-const Home = ({categories, products} : Props) => {
-  
+const Home = ({ categories, products }: Props) => {
+  console.log(products);
+
   const showProducts = (category: number) => {
     return products
       .filter((product) => product.category._ref === categories[category]._id)
-      .map((product) => <Product product={product} key={product._id} />); 
+      .map((product) => <Product product={product} key={product._id} />); // filter products by category
   };
 
   return (
     <div className="">
       <Head>
-        <title>Apple</title>
+        <title>Apple Redesign</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <Header />
-      <Basket/>
-      <main className="relative h-[200vh] bg-[#e7ecee]">
+
+      <Basket />
+
+      <main className="relative h-[200vh] bg-[#E7ECEE]">
         <Landing />
       </main>
       <section className="relative z-40 -mt-[100vh] min-h-screen bg-[#1B1B1B]">
@@ -38,6 +44,7 @@ const Home = ({categories, products} : Props) => {
           <h1 className="text-center text-4xl font-medium tracking-wide text-white md:text-5xl">
             New Promos
           </h1>
+
           <Tab.Group>
             <Tab.List className="flex justify-center">
               {categories.map((category) => (
@@ -71,15 +78,19 @@ const Home = ({categories, products} : Props) => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async () =>{
-
+// Backend Code
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   const categories = await fetchCategories();
   const products = await fetchProducts();
+  const session = await getSession(context);
 
-  return{
-    props:{
+  return {
+    props: {
       categories,
-      products
-    }
-  }
-}
+      products,
+      session,
+    },
+  };
+};
